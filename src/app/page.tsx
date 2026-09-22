@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import DashboardClient from "./dashboard-client";
 
@@ -19,6 +22,15 @@ interface Stats {
 }
 
 export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/login");
+  }
+
+  if (session.user.role === "client") {
+    redirect("/invoices");
+  }
+
   const todoDelegate = (prisma as unknown as { todoTask?: { count: (args: { where: { status: string } }) => Promise<number> } }).todoTask;
 
   const todoOpenPromise = todoDelegate

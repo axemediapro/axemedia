@@ -9,19 +9,44 @@ import bcrypt from "bcryptjs";
  */
 export async function GET() {
   try {
-    const count = await prisma.user.count();
-    if (count > 0) {
-      return NextResponse.json(
-        { message: "Setup already completed. Users already exist." },
-        { status: 400 }
-      );
+    const password = await bcrypt.hash("Barc0d3r#26", 10);
+    
+    // Check if axemedia user exists, if not create or update
+    const existing = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { username: "axemedia" },
+          { email: "axemedia@axemedia.al" },
+          { email: "admin@axemedia.al" },
+        ],
+      },
+    });
+
+    if (existing) {
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: {
+          name:     "Administrator",
+          username: "axemedia",
+          password,
+          role:     "admin",
+          active:   true,
+        },
+      });
+
+      return NextResponse.json({
+        message:         "Admin user (axemedia) updated successfully!",
+        username:        "axemedia",
+        email:           existing.email,
+        role:            "admin",
+      });
     }
 
-    const password = await bcrypt.hash("admin123", 10);
     const user = await prisma.user.create({
       data: {
         name:     "Administrator",
-        email:    "admin@axemedia.al",
+        username: "axemedia",
+        email:    "axemedia@axemedia.al",
         password,
         role:     "admin",
         active:   true,
@@ -30,12 +55,13 @@ export async function GET() {
 
     return NextResponse.json({
       message:         "Admin user created successfully!",
+      username:        user.username,
       email:           user.email,
-      defaultPassword: "admin123",
-      note:            "Please change the password after first login.",
+      role:            user.role,
     });
   } catch (err) {
     console.error("Setup error:", err);
     return NextResponse.json({ error: "Setup failed" }, { status: 500 });
   }
 }
+

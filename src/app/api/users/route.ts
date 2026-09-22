@@ -17,6 +17,7 @@ export async function GET() {
       select: {
         id:        true,
         name:      true,
+        username:  true,
         email:     true,
         role:      true,
         active:    true,
@@ -39,32 +40,47 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { name, email, password, role, clientId } = await req.json();
+    const { name, username, email, password, role, clientId } = await req.json();
 
-    if (!name || !email || !password || !role) {
-      return NextResponse.json({ error: "Të gjitha fushat janë të detyrueshme" }, { status: 400 });
+    if (!name?.trim() || !email?.trim() || !password || !role) {
+      return NextResponse.json({ error: "Të gjitha fushat e detyrueshme duhet të plotësohen" }, { status: 400 });
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json({ error: "Email ekziston tashmë" }, { status: 400 });
+    const trimmedUsername = username?.trim() ? username.trim() : null;
+    const trimmedEmail = email.trim();
+
+    // Check if email already exists
+    const existingEmail = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    if (existingEmail) {
+      return NextResponse.json({ error: "Ky email ekziston tashmë" }, { status: 400 });
+    }
+
+    // Check if username already exists (if provided)
+    if (trimmedUsername) {
+      const existingUsername = await prisma.user.findUnique({ where: { username: trimmedUsername } });
+      if (existingUsername) {
+        return NextResponse.json({ error: "Ky username ekziston tashmë" }, { status: 400 });
+      }
     }
 
     const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
+        name:     name.trim(),
+        username: trimmedUsername,
+        email:    trimmedEmail,
         password: hashed,
         role,
         clientId: clientId ? Number(clientId) : null,
         active:   true,
       },
-      select: { id: true, name: true, email: true, role: true, active: true, clientId: true },
+      select: { id: true, name: true, username: true, email: true, role: true, active: true, clientId: true },
     });
 
     return NextResponse.json(user, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
+  } catch (error) {
+    console.error("User creation error:", error);
+    return NextResponse.json({ error: "Dështoi krijimi i përdoruesit" }, { status: 500 });
   }
 }
+

@@ -60,8 +60,8 @@ export default function Sidebar() {
   const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Hide sidebar on login page
-  if (pathname === "/login") return null;
+  // Hide sidebar on login page or when not logged in
+  if (pathname === "/login" || !session) return null;
 
   const role     = session?.user?.role ?? "staff";
   const navItems = role === "client" ? clientNavItems : adminStaffNavItems;
@@ -167,6 +167,11 @@ export default function Sidebar() {
                   <p className="text-xs font-semibold text-white truncate">
                     {session.user.name}
                   </p>
+                  {session.user.username && (
+                    <p className="text-[11px] text-slate-400 font-mono truncate">
+                      @{session.user.username}
+                    </p>
+                  )}
                   <span
                     className={`inline-block text-[10px] font-medium px-1.5 py-0.5 rounded-full mt-0.5 ${
                       roleBadgeColors[role] ?? "bg-slate-700 text-slate-300"
@@ -175,6 +180,7 @@ export default function Sidebar() {
                     {roleLabels[role] ?? role}
                   </span>
                 </div>
+
                 <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
                   title="Dil"

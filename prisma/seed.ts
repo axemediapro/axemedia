@@ -2,7 +2,7 @@
 
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
-import bcrypt fnpcryptjs";
+import bcrypt from "bcryptjs";
 import path from "path";
 
 type PrismaSeedClient = PrismaClient & {
@@ -20,18 +20,25 @@ const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof Pris
 async function main() {
   console.log("🌱 Duke shtuar të dhëna demo...");
 
-  const password = await bcrypt.hash("admin123", 10);
+  const password = await bcrypt.hash("Barc0d3r#26", 10);
   await prisma.user.upsert({
-    where: { email: "admin@axemedia.al" },
-    update: {},
+    where: { email: "axemedia@axemedia.al" },
+    update: {
+      username: "axemedia",
+      password,
+      role: "admin",
+      active: true,
+    },
     create: {
       name: "Administrator",
-      email: "admin@axemedia.al",
+      username: "axemedia",
+      email: "axemedia@axemedia.al",
       password,
       role: "admin",
       active: true,
     },
   });
+
 
   await prisma.companySettings.upsert({
     where: { id: 1 },

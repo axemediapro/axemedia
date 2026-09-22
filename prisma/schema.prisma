@@ -208,6 +208,7 @@ model DomainInvoice {
 model User {
   id        Int      @id @default(autoincrement())
   name      String
+  username  String?  @unique
   email     String   @unique
   password  String
   role      String   @default("staff")
@@ -217,3 +218,4 @@ model User {
   updatedAt DateTime @updatedAt
   client    Client?  @relation(fields: [clientId], references: [id])
 }
+

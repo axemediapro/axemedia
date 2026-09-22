@@ -8,24 +8,36 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email:    { label: "Email",        type: "email"    },
-        password: { label: "Fjalëkalimi",  type: "password" },
+        username: { label: "Përdoruesi ose Email", type: "text" },
+        email:    { label: "Email",               type: "text" },
+        password: { label: "Fjalëkalimi",         type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        const loginInput = (credentials?.username || credentials?.email || "").trim();
+        const password = credentials?.password || "";
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+        if (!loginInput || !password) return null;
+
+        const user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { username: loginInput },
+              { email: loginInput },
+              { username: loginInput.toLowerCase() },
+              { email: loginInput.toLowerCase() },
+            ],
+          },
         });
 
         if (!user || !user.active) return null;
 
-        const valid = await bcrypt.compare(credentials.password, user.password);
+        const valid = await bcrypt.compare(password, user.password);
         if (!valid) return null;
 
         return {
           id:       String(user.id),
           name:     user.name,
+          username: user.username,
           email:    user.email,
           role:     user.role,
           clientId: user.clientId ? String(user.clientId) : null,
@@ -37,15 +49,17 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role     = (user as { role: string; clientId: string | null }).role;
+        token.role     = (user as { role: string; clientId: string | null; username?: string | null }).role;
         token.id       = user.id;
-        token.clientId = (user as { role: string; clientId: string | null }).clientId;
+        token.clientId = (user as { role: string; clientId: string | null; username?: string | null }).clientId;
+        token.username = (user as { role: string; clientId: string | null; username?: string | null }).username ?? null;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.role     = token.role     as string;
       session.user.id       = token.id       as string;
+      session.user.username = (token.username as string | null) ?? null;
       session.user.clientId = token.clientId as string | null;
       return session;
     },
@@ -53,5 +67,6 @@ export const authOptions: NextAuthOptions = {
 
   pages:   { signIn: "/login" },
   session: { strategy: "jwt" },
-  secret:  process.env.NEXTAUTH_SECRET ?? "axemedia-dev-secret",
+  secret:  process.env.NEXTAUTH_SECRET ?? "axemedia-dev-secret-super-secure-key-2026",
 };
+
