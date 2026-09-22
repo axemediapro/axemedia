@@ -7,8 +7,11 @@ import {
   LayoutDashboard,
   Users,
   FileText,
+  ReceiptText,
   TrendingDown,
   Calendar,
+  BellRing,
+  ListTodo,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -27,7 +30,10 @@ const adminStaffNavItems = [
   { href: "/clients",  label: "Klientët",            icon: Users },
   { href: "/offers",   label: "Ofertat",             icon: Tag },
   { href: "/invoices", label: "Faturat",             icon: FileText },
+  { href: "/domain-invoices", label: "Domain/Hosting Invoices", icon: ReceiptText },
   { href: "/expenses", label: "Shpenzimet",          icon: TrendingDown },
+  { href: "/todos",    label: "TO DO",               icon: ListTodo },
+  { href: "/domains",  label: "Domain Reminder",     icon: BellRing },
   { href: "/calendar", label: "Kalendar Postimesh", icon: Calendar },
   { href: "/services", label: "Shërbimet",           icon: Wrench },
 ];
@@ -62,7 +68,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`flex flex-col bg-slate-900 text-slate-100 transition-all duration-300 ease-in-out ${
+      className={`print:hidden flex flex-col bg-slate-900 text-slate-100 transition-all duration-300 ease-in-out ${
         collapsed ? "w-16" : "w-64"
       } min-h-screen relative`}
     >

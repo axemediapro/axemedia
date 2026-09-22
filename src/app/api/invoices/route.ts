@@ -3,12 +3,19 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-function generateInvoiceNumber(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const random = Math.floor(Math.random() * 9000) + 1000;
-  return `AXE-${year}${month}-${random}`;
+async function generateInvoiceNumber(): Promise<string> {
+  const invoices = await prisma.invoice.findMany({
+    select: { invoiceNumber: true },
+  });
+
+  // Keep an auto sequence based on numeric invoice numbers only, starting from 51.
+  const numericValues = invoices
+    .map((item) => item.invoiceNumber.trim())
+    .filter((nr) => /^\d+$/.test(nr))
+    .map((nr) => Number(nr));
+
+  const nextNumber = numericValues.length ? Math.max(...numericValues) + 1 : 51;
+  return String(nextNumber);
 }
 
 export async function GET() {
@@ -46,7 +53,7 @@ export async function POST(req: Request) {
     );
     const tax = subtotal * (taxRate / 100);
     const total = subtotal + tax;
-    const invoiceNumber = generateInvoiceNumber();
+    const invoiceNumber = await generateInvoiceNumber();
 
     const invoice = await prisma.invoice.create({
       data: {

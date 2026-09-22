@@ -1,0 +1,22 @@
+CREATE TABLE "DomainInvoice" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "invoiceNumber" TEXT NOT NULL,
+    "issueDate" DATETIME NOT NULL,
+    "customer" TEXT NOT NULL DEFAULT '',
+    "customerEmail" TEXT NOT NULL DEFAULT '',
+    "providerName" TEXT NOT NULL DEFAULT '',
+    "serviceType" TEXT NOT NULL DEFAULT 'hosting',
+    "domainName" TEXT NOT NULL DEFAULT '',
+    "service" TEXT NOT NULL DEFAULT '',
+    "period" TEXT NOT NULL DEFAULT '',
+    "amount" REAL NOT NULL DEFAULT 0,
+    "currency" TEXT NOT NULL DEFAULT 'EUR',
+    "notes" TEXT NOT NULL DEFAULT '',
+    "mainColor" TEXT NOT NULL DEFAULT '#06B6D4',
+    "businessName" TEXT NOT NULL DEFAULT '',
+    "businessAddress" TEXT NOT NULL DEFAULT '',
+    "businessEmail" TEXT NOT NULL DEFAULT '',
+    "businessPhone" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

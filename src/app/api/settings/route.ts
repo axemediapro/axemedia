@@ -13,12 +13,18 @@ const DEFAULTS = {
   swiftCode:     "",
   logoUrl:       "",
   stampUrl:      "",
+  stampSize:     55,
+  stampPosX:     0,
+  stampPosY:     0,
+  stampRotate:   0,
   signatureUrl:  "",
   invoiceFooter: "Faleminderit për bashkëpunimin!",
   offerFooter:   "Kjo ofertë nuk është faturë. Pagesa nuk kërkohet deri pas konfirmimit.",
   logoSize:      22,
   primaryColor:  "#009ec6",
   fontFamily:    "helvetica",
+  domainInvoiceLogoUrl:       "",
+  domainInvoiceBackgroundUrl: "",
 };
 
 export async function GET() {

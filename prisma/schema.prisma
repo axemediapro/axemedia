@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model Client {
@@ -21,6 +21,7 @@ model Client {
   invoices  Invoice[]
   offers    Offer[]
   posts     Post[]
+  todoTasks TodoTask[]
   user      User?
 }
 
@@ -60,6 +61,36 @@ model Expense {
   notes     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model DomainReminder {
+  id               Int      @id @default(autoincrement())
+  domain           String   @unique
+  provider         String?
+  billingCycle     String   @default("yearly")
+  amount           Float    @default(0)
+  currency         String   @default("EUR")
+  nextDueDate      DateTime
+  remindDaysBefore Int      @default(7)
+  autoRenew        Boolean  @default(true)
+  status           String   @default("active")
+  lastPaidDate     DateTime?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model TodoTask {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  priority    String   @default("medium")
+  status      String   @default("open")
+  clientId    Int?
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  client      Client?  @relation(fields: [clientId], references: [id])
 }
 
 model Post {
@@ -113,6 +144,9 @@ model Service {
   description  String?
   defaultPrice Float    @default(0)
   unit         String?  @default("copë")
+  price1h      Float?
+  price2to5h   Float?
+  price5to8h   Float?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -130,13 +164,45 @@ model CompanySettings {
   swiftCode     String   @default("")
   logoUrl       String   @default("")
   stampUrl      String   @default("")
+  stampSize     Int      @default(55)
+  stampPosX     Int      @default(0)
+  stampPosY     Int      @default(0)
+  stampRotate   Int      @default(0)
   signatureUrl  String   @default("")
   invoiceFooter String   @default("Faleminderit për bashkëpunimin!")
   offerFooter   String   @default("Kjo ofertë nuk është faturë. Pagesa nuk kërkohet deri pas konfirmimit.")
   logoSize      Int      @default(22)
   primaryColor  String   @default("#009ec6")
   fontFamily    String   @default("helvetica")
+  domainInvoiceLogoUrl       String   @default("")
+  domainInvoiceBackgroundUrl String   @default("")
   updatedAt     DateTime @updatedAt
+}
+
+model DomainInvoice {
+  id                 Int      @id @default(autoincrement())
+  invoiceNumber      String
+  issueDate          DateTime
+  status             String   @default("unpaid")
+  customer           String   @default("")
+  customerEmail      String   @default("")
+  providerName       String   @default("")
+  serviceType        String   @default("hosting")
+  domainName         String   @default("")
+  service            String   @default("")
+  period             String   @default("")
+  quantity           Float    @default(1)
+  amount             Float    @default(0)
+  taxRate            Float    @default(0)
+  currency           String   @default("EUR")
+  notes              String   @default("")
+  mainColor          String   @default("#06B6D4")
+  businessName       String   @default("")
+  businessAddress    String   @default("")
+  businessEmail      String   @default("")
+  businessPhone      String   @default("")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model User {

@@ -39,3 +39,62 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  main {
+    overflow: visible !important;
+  }
+
+  .domain-invoice-shell {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .domain-invoice-shell > div {
+    max-width: none !important;
+  }
+
+  .domain-invoice-shell > div > header {
+    display: none !important;
+  }
+
+  .domain-invoice-shell > div > .grid {
+    display: block !important;
+  }
+
+  .domain-invoice-document {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  .domain-invoice-document article {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm !important;
+    background-color: #fff !important;
+  }
+}

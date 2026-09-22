@@ -19,7 +19,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params;
     const body = await req.json();
-    const { status, clientId, issueDate, items, notes, taxRate } = body;
+    const { status, clientId, invoiceNumber, issueDate, items, notes, taxRate } = body;
 
     // Full edit (from edit page)
     if (items !== undefined) {
@@ -32,6 +32,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         where: { id: parseInt(id) },
         data: {
           clientId:  parseInt(clientId),
+          invoiceNumber: invoiceNumber ? String(invoiceNumber).trim() : undefined,
           issueDate: issueDate ? new Date(issueDate) : undefined,
           subtotal, tax, total, notes,
           ...(status !== undefined && { status }),
@@ -57,7 +58,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       include: { client: true, items: true },
     });
     return NextResponse.json(invoice);
-  } catch {
+  } catch (error: unknown) {
+    const err = error as { code?: string };
+    if (err?.code === "P2002") {
+      return NextResponse.json({ error: "Nr. i faturës ekziston tashmë" }, { status: 409 });
+    }
     return NextResponse.json({ error: "Failed to update invoice" }, { status: 500 });
   }
 }

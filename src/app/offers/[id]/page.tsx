@@ -70,54 +70,112 @@ const statusLabel: Record<string, string> = {
   expired:  "Skaduar",
 };
 
-async function loadImageDataUrl(src: string): Promise<{ dataUrl: string; w: number; h: number } | null> {
-  if (/\.svg$/i.test(src)) {
+function isSvgSource(src: string): boolean {
+  if (src.startsWith("data:image/svg")) return true;
+  try {
+    const url = new URL(src, window.location.origin);
+    return /\.svg$/i.test(url.pathname);
+  } catch {
+    return /\.svg($|[?#])/i.test(src);
+  }
+}
+
+async function loadImageDataUrl(src: string, maxDimension = 800, quality = 0.82): Promise<{ dataUrl: string; w: number; h: number } | null> {
+  if (isSvgSource(src)) {
     try {
-      const resp    = await fetch(src);
+      const resp = await fetch(src);
       const svgText = await resp.text();
-      let vw = 0, vh = 0;
+      let vw = 0;
+      let vh = 0;
       const vbMatch = svgText.match(/viewBox="([^"]+)"/);
       if (vbMatch) {
         const parts = vbMatch[1].trim().split(/[\s,]+/).map(Number);
-        if (parts.length >= 4 && parts[2] > 0 && parts[3] > 0) { vw = parts[2]; vh = parts[3]; }
+        if (parts.length >= 4 && parts[2] > 0 && parts[3] > 0) {
+          vw = parts[2];
+          vh = parts[3];
+        }
       }
       if (!vw || !vh) {
-        const wm = svgText.match(/\bwidth="(\d+(?:\.\d+)?)"/);  const hm = svgText.match(/\bheight="(\d+(?:\.\d+)?)"/); 
-        if (wm && hm) { vw = parseFloat(wm[1]); vh = parseFloat(hm[1]); }
+        const wm = svgText.match(/\bwidth="(\d+(?:\.\d+)?)"/);
+        const hm = svgText.match(/\bheight="(\d+(?:\.\d+)?)"/);
+        if (wm && hm) {
+          vw = parseFloat(wm[1]);
+          vh = parseFloat(hm[1]);
+        }
       }
-      if (!vw || !vh) { vw = 1; vh = 1; }
-      const rH = 300;
-      const rW = Math.max(1, Math.round((vw / vh) * rH));
+      if (!vw || !vh) {
+        vw = 1;
+        vh = 1;
+      }
+      const targetHeight = Math.max(90, Math.min(220, maxDimension));
+      const targetWidth = Math.max(1, Math.round((vw / vh) * targetHeight));
       const canvas = document.createElement("canvas");
-      canvas.width = rW; canvas.height = rH;
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
       const ctx = canvas.getContext("2d");
       if (!ctx) return null;
-      await new Promise<void>((res) => {
+      await new Promise<void>((resolve) => {
         const img = new window.Image();
-        const blob    = new Blob([svgText], { type: "image/svg+xml" });
+        const blob = new Blob([svgText], { type: "image/svg+xml" });
         const blobUrl = URL.createObjectURL(blob);
-        img.onload  = () => { ctx.drawImage(img, 0, 0, rW, rH); URL.revokeObjectURL(blobUrl); res(); };
-        img.onerror = () => { URL.revokeObjectURL(blobUrl); res(); };
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+          URL.revokeObjectURL(blobUrl);
+          resolve();
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(blobUrl);
+          resolve();
+        };
         img.src = blobUrl;
       });
-      return { dataUrl: canvas.toDataURL("image/png"), w: rW, h: rH };
-    } catch { return null; }
+      return { dataUrl: canvas.toDataURL("image/png"), w: targetWidth, h: targetHeight };
+    } catch {
+      return null;
+    }
   }
+
   return new Promise((resolve) => {
     const img = new window.Image();
+    img.crossOrigin = "anonymous";
     img.onload = () => {
-      const w = img.naturalWidth  || 200;
-      const h = img.naturalHeight || 200;
+      const originalW = img.naturalWidth || 200;
+      const originalH = img.naturalHeight || 200;
+      const scale = Math.min(1, maxDimension / Math.max(originalW, originalH));
+      const w = Math.max(1, Math.round(originalW * scale));
+      const h = Math.max(1, Math.round(originalH * scale));
       const canvas = document.createElement("canvas");
-      canvas.width = w; canvas.height = h;
+      canvas.width = w;
+      canvas.height = h;
       const ctx = canvas.getContext("2d");
-      if (!ctx) { resolve(null); return; }
-      ctx.drawImage(img, 0, 0);
+      if (!ctx) {
+        resolve(null);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, w, h);
       resolve({ dataUrl: canvas.toDataURL("image/png"), w, h });
     };
     img.onerror = () => resolve(null);
     img.src = src;
   });
+}
+
+function triggerPdfDownload(pdfBlob: Blob, fileName: string) {
+  const objectUrl = URL.createObjectURL(pdfBlob);
+  if (window.isSecureContext) {
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } else {
+    const popup = window.open(objectUrl, "_blank", "noopener,noreferrer");
+    if (!popup) {
+      window.location.href = objectUrl;
+    }
+  }
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 8000);
 }
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -162,7 +220,7 @@ async function generateOfferPDF(offer: Offer, settings: CompanySettings) {
   // ── 2. HEADER ───────────────────────────────────────────────
   let logoEndX = L;
   if (settings.logoUrl) {
-    const logoData = await loadImageDataUrl(settings.logoUrl);
+    const logoData = await loadImageDataUrl(settings.logoUrl, 420, 0.8);
     if (logoData) {
       const logoH = settings.logoSize || 22;
       const logoW = (logoData.w / logoData.h) * logoH;
@@ -356,7 +414,8 @@ async function generateOfferPDF(offer: Offer, settings: CompanySettings) {
   trapL(0,  288, 52, 7,  9,  amber);
   trapR(W,  284, 58, 13, 10, dark);
 
-  doc.save(`${offer.offerNumber}.pdf`);
+  const pdfBlob = doc.output("blob");
+  triggerPdfDownload(pdfBlob, `${offer.offerNumber}.pdf`);
 }
 
 export default function OfferDetailPage({ params }: { params: Promise<{ id: string }> }) {

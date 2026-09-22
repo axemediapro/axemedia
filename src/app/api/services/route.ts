@@ -17,10 +17,18 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { name, description, defaultPrice, unit } = await req.json();
+    const { name, description, defaultPrice, unit, price1h, price2to5h, price5to8h } = await req.json();
     if (!name) return NextResponse.json({ error: "Emri është i detyrueshëm" }, { status: 400 });
     const service = await prisma.service.create({
-      data: { name, description, defaultPrice: parseFloat(defaultPrice) || 0, unit: unit || "copë" },
+      data: {
+        name,
+        description,
+        defaultPrice: parseFloat(defaultPrice) || 0,
+        unit: unit || "copë",
+        price1h: price1h !== undefined && price1h !== "" && price1h !== null ? parseFloat(price1h) : null,
+        price2to5h: price2to5h !== undefined && price2to5h !== "" && price2to5h !== null ? parseFloat(price2to5h) : null,
+        price5to8h: price5to8h !== undefined && price5to8h !== "" && price5to8h !== null ? parseFloat(price5to8h) : null,
+      },
     });
     return NextResponse.json(service, { status: 201 });
   } catch {

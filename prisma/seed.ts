@@ -1,15 +1,105 @@
+/// <reference types="node" />
+
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import bcrypt fnpcryptjs";
+import path from "path";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is not set");
-}
+type PrismaSeedClient = PrismaClient & {
+  domainReminder: {
+    upsert: (args: unknown) => Promise<unknown>;
+  };
+};
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const dbPath = path.join(process.cwd(), "prisma", "axemedia.db");
+
+const rawConnectionString = process.env.DATABASE_URL ?? `file:${dbPath}`;
+const adapter = new PrismaBetterSqlite3({ url: rawConnectionString.includes("dev.db") ? `file:${dbPath}` : rawConnectionString });
+const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof PrismaClient>[0]) as PrismaSeedClient;
 
 async function main() {
   console.log("🌱 Duke shtuar të dhëna demo...");
+
+  const password = await bcrypt.hash("admin123", 10);
+  await prisma.user.upsert({
+    where: { email: "admin@axemedia.al" },
+    update: {},
+    create: {
+      name: "Administrator",
+      email: "admin@axemedia.al",
+      password,
+      role: "admin",
+      active: true,
+    },
+  });
+
+  await prisma.companySettings.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      name: "AXEmedia",
+      tagline: "Agjensi Marketingu & Dizajni",
+      address: "Tiranë, Shqipëri",
+      phone: "+355 69 000 0000",
+      email: "info@axemedia.al",
+      website: "www.axemedia.al",
+      stampSize: 55,
+      stampPosX: 0,
+      stampPosY: 0,
+      stampRotate: 0,
+    },
+  });
+
+  await Promise.all([
+    prisma.service.upsert({
+      where: { id: 1 },
+      update: {},
+      create: { name: "Menaxhim Social Media", description: "Përmbajtje dhe menaxhim mujor", defaultPrice: 300, unit: "muaj" },
+    }),
+    prisma.service.upsert({
+      where: { id: 2 },
+      update: {},
+      create: { name: "Dizajn Grafik", description: "Kreativa për rrjete sociale", defaultPrice: 80, unit: "copë" },
+    }),
+    prisma.service.upsert({
+      where: { id: 3 },
+      update: {},
+      create: { name: "Konsulencë Marketingu", description: "Strategji dhe analizë", defaultPrice: 120, unit: "orë" },
+    }),
+  ]);
+
+  await Promise.all([
+    prisma.domainReminder.upsert({
+      where: { domain: "axemedia.al" },
+      update: {},
+      create: {
+        domain: "axemedia.al",
+        provider: "Hostinger",
+        billingCycle: "yearly",
+        amount: 18,
+        currency: "EUR",
+        nextDueDate: new Date("2027-01-10"),
+        remindDaysBefore: 30,
+        autoRenew: true,
+        status: "active",
+      },
+    }),
+    prisma.domainReminder.upsert({
+      where: { domain: "axemedia.com" },
+      update: {},
+      create: {
+        domain: "axemedia.com",
+        provider: "Cloudflare",
+        billingCycle: "monthly",
+        amount: 2.5,
+        currency: "USD",
+        nextDueDate: new Date("2026-08-01"),
+        remindDaysBefore: 7,
+        autoRenew: false,
+        status: "active",
+      },
+    }),
+  ]);
 
   // Create demo clients
   const clients = await Promise.all([
@@ -32,9 +122,21 @@ async function main() {
 
   console.log(`✅ Krijuar ${clients.length} klientë`);
 
+  const demoInvoiceExists = await prisma.invoice.findUnique({
+    where: { invoiceNumber: "AXE-202506-1001" },
+    select: { id: true },
+  });
+
+  if (demoInvoiceExists) {
+    console.log("✅ Të dhënat demo ekzistojnë tashmë; seed po e anashkalon pjesën e faturave, shpenzimeve dhe postimeve.");
+    return;
+  }
+
   // Create demo invoices
-  const invoice1 = await prisma.invoice.create({
-    data: {
+  const invoice1 = await prisma.invoice.upsert({
+    where: { invoiceNumber: "AXE-202506-1001" },
+    update: {},
+    create: {
       invoiceNumber: "AXE-202506-1001",
       clientId: clients[0].id,
       status: "paid",
@@ -52,8 +154,10 @@ async function main() {
     },
   });
 
-  const invoice2 = await prisma.invoice.create({
-    data: {
+  const invoice2 = await prisma.invoice.upsert({
+    where: { invoiceNumber: "AXE-202506-1002" },
+    update: {},
+    create: {
       invoiceNumber: "AXE-202506-1002",
       clientId: clients[1].id,
       status: "sent",
@@ -71,8 +175,10 @@ async function main() {
     },
   });
 
-  await prisma.invoice.create({
-    data: {
+  await prisma.invoice.upsert({
+    where: { invoiceNumber: "AXE-202606-1003" },
+    update: {},
+    create: {
       invoiceNumber: "AXE-202606-1003",
       clientId: clients[2].id,
       status: "draft",

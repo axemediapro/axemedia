@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Plus, Trash2, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import ServiceAutocomplete from "@/components/ServiceAutocomplete";
+import { calculateServiceUnitPrice, ServiceTierConfig } from "@/lib/service-pricing";
 
 interface Client {
   id: number;
@@ -12,12 +13,10 @@ interface Client {
   email: string;
 }
 
-interface Service {
+type Service = ServiceTierConfig & {
   id: number;
-  name: string;
-  defaultPrice: number;
-  unit?: string;
-}
+  description?: string | null;
+};
 
 interface LineItem {
   description: string;
@@ -44,6 +43,7 @@ export default function EditInvoicePage() {
 
   // Form state
   const [clientId,  setClientId]  = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [issueDate, setIssueDate] = useState("");
   const [taxRate,   setTaxRate]   = useState(18);
   const [notes,     setNotes]     = useState("");
@@ -60,6 +60,7 @@ export default function EditInvoicePage() {
       setServices(Array.isArray(svcs) ? svcs : []);
       if (inv && !inv.error) {
         setClientId(String(inv.clientId));
+        setInvoiceNumber(inv.invoiceNumber || "");
         setIssueDate(toDateInput(inv.issueDate));
         setStatus(inv.status);
         setNotes(inv.notes || "");
@@ -84,8 +85,23 @@ export default function EditInvoicePage() {
 
   const addItem    = () => setItems([...items, { description: "", quantity: 1, unitPrice: 0 }]);
   const removeItem = (i: number) => setItems(items.filter((_, idx) => idx !== i));
-  const updateItem = (i: number, field: keyof LineItem, value: string | number) =>
-    setItems(items.map((item, idx) => idx === i ? { ...item, [field]: value } : item));
+  const updateItem = (i: number, field: keyof LineItem, value: string | number) => {
+    setItems((prev) =>
+      prev.map((item, idx) => {
+        if (idx !== i) return item;
+        const updated = { ...item, [field]: value };
+        if (field === "quantity") {
+          const matchingService = services.find(
+            (s) => s.name.toLowerCase() === updated.description.trim().toLowerCase()
+          );
+          if (matchingService) {
+            updated.unitPrice = calculateServiceUnitPrice(matchingService, Number(value));
+          }
+        }
+        return updated;
+      })
+    );
+  };
 
   const subtotal = items.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
   const tax      = subtotal * (taxRate / 100);
@@ -101,7 +117,7 @@ export default function EditInvoicePage() {
     const res = await fetch(`/api/invoices/${id}`, {
       method:  "PUT",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ clientId, issueDate, taxRate, notes, status, items }),
+      body:    JSON.stringify({ clientId, invoiceNumber, issueDate, taxRate, notes, status, items }),
     });
     if (res.ok) {
       router.push(`/invoices/${id}`);
@@ -147,6 +163,16 @@ export default function EditInvoicePage() {
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <h2 className="font-semibold text-slate-900 mb-4">Detajet e Faturës</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Nr. Faturës *</label>
+              <input
+                type="text"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+                required
+                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Klienti *</label>
               <select value={clientId} onChange={(e) => setClientId(e.target.value)} required
@@ -204,10 +230,15 @@ export default function EditInvoicePage() {
                   <ServiceAutocomplete
                     value={item.description}
                     onChange={(v) => updateItem(i, "description", v)}
-                    onSelect={(name, price) => {
-                      setItems((prev) => prev.map((it, idx) =>
-                        idx === i ? { ...it, description: name, unitPrice: price } : it
-                      ));
+                    onSelect={(name, price, svc) => {
+                      setItems((prev) =>
+                        prev.map((it, idx) => {
+                          if (idx !== i) return it;
+                          const matchingSvc = svc || services.find((s) => s.name.toLowerCase() === name.toLowerCase());
+                          const unitPrice = matchingSvc ? calculateServiceUnitPrice(matchingSvc, it.quantity) : price;
+                          return { ...it, description: name, unitPrice };
+                        })
+                      );
                     }}
                     services={services}
                     placeholder="Shërbimi / Produkti"

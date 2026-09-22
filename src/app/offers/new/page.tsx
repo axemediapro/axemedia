@@ -13,12 +13,12 @@ interface Client {
   email: string;
 }
 
-interface Service {
+import { calculateServiceUnitPrice, ServiceTierConfig } from "@/lib/service-pricing";
+
+type Service = ServiceTierConfig & {
   id: number;
-  name: string;
-  defaultPrice: number;
-  unit?: string;
-}
+  description?: string | null;
+};
 
 interface LineItem {
   description: string;
@@ -55,8 +55,23 @@ export default function NewOfferPage() {
 
   const addItem    = () => setItems([...items, { description: "", quantity: 1, unitPrice: 0 }]);
   const removeItem = (i: number) => setItems(items.filter((_, idx) => idx !== i));
-  const updateItem = (i: number, field: keyof LineItem, value: string | number) =>
-    setItems(items.map((item, idx) => idx === i ? { ...item, [field]: value } : item));
+  const updateItem = (i: number, field: keyof LineItem, value: string | number) => {
+    setItems((prev) =>
+      prev.map((item, idx) => {
+        if (idx !== i) return item;
+        const updated = { ...item, [field]: value };
+        if (field === "quantity") {
+          const matchingService = services.find(
+            (s) => s.name.toLowerCase() === updated.description.trim().toLowerCase()
+          );
+          if (matchingService) {
+            updated.unitPrice = calculateServiceUnitPrice(matchingService, Number(value));
+          }
+        }
+        return updated;
+      })
+    );
+  };
 
   const subtotal = items.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
   const tax      = subtotal * (taxRate / 100);
@@ -181,10 +196,15 @@ export default function NewOfferPage() {
                   <ServiceAutocomplete
                     value={item.description}
                     onChange={(v) => updateItem(i, "description", v)}
-                    onSelect={(name, price) => {
-                      setItems((prev) => prev.map((it, idx) =>
-                        idx === i ? { ...it, description: name, unitPrice: price } : it
-                      ));
+                    onSelect={(name, price, svc) => {
+                      setItems((prev) =>
+                        prev.map((it, idx) => {
+                          if (idx !== i) return it;
+                          const matchingSvc = svc || services.find((s) => s.name.toLowerCase() === name.toLowerCase());
+                          const unitPrice = matchingSvc ? calculateServiceUnitPrice(matchingSvc, it.quantity) : price;
+                          return { ...it, description: name, unitPrice };
+                        })
+                      );
                     }}
                     services={services}
                     placeholder="Shërbimi / Produkti"
