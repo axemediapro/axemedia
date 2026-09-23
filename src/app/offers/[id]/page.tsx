@@ -476,21 +476,21 @@ export default function OfferDetailPage({ params }: { params: Promise<{ id: stri
   );
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-4xl">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/offers" className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors">
+          <Link href="/offers" className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl font-bold text-slate-900 font-mono">{offer.offerNumber}</h1>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[offer.status]}`}>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColors[offer.status]}`}>
                 {statusLabel[offer.status]}
               </span>
               {offer.convertedToInvoiceId && (
-                <Link href={`/invoices/${offer.convertedToInvoiceId}`} className="px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700 border border-indigo-200 hover:underline">
+                <Link href={`/invoices/${offer.convertedToInvoiceId}`} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 border border-indigo-200 hover:underline">
                   → Fatura #{offer.convertedToInvoiceId}
                 </Link>
               )}
@@ -506,107 +506,107 @@ export default function OfferDetailPage({ params }: { params: Promise<{ id: stri
         {/* Actions */}
         <div className="flex flex-wrap gap-2">
           {offer.status === "draft" && (
-            <button onClick={() => updateStatus("sent")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-60 transition-colors">
+            <button onClick={() => updateStatus("sent")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition-colors">
               <Send className="w-4 h-4" /> Shëno Dërguar
             </button>
           )}
           {(offer.status === "sent" || offer.status === "draft") && !offer.convertedToInvoiceId && (
-            <button onClick={() => updateStatus("accepted")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 disabled:opacity-60 transition-colors">
+            <button onClick={() => updateStatus("accepted")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-700 disabled:opacity-60 transition-colors">
               <CheckCircle className="w-4 h-4" /> Pranuar
             </button>
           )}
           {(offer.status === "sent" || offer.status === "draft") && (
-            <button onClick={() => updateStatus("rejected")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-medium hover:bg-red-100 disabled:opacity-60 transition-colors">
+            <button onClick={() => updateStatus("rejected")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-red-100 disabled:opacity-60 transition-colors">
               <XCircle className="w-4 h-4" /> Refuzuar
             </button>
           )}
           {!offer.convertedToInvoiceId && offer.status !== "rejected" && (
-            <button onClick={handleConvert} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-sm font-medium hover:bg-indigo-100 disabled:opacity-60 transition-colors">
+            <button onClick={handleConvert} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-100 disabled:opacity-60 transition-colors">
               <ArrowRightCircle className="w-4 h-4" /> Konverto në Faturë
             </button>
           )}
-          <button onClick={() => window.print()} className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors">
+          <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition-colors">
             <Printer className="w-4 h-4" /> Printo
           </button>
-          <Link href={`/offers/${offer.id}/edit`} className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors">
+          <Link href={`/offers/${offer.id}/edit`} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-amber-100 transition-colors">
             <Edit2 className="w-4 h-4" /> Ndrysho
           </Link>
-          <button onClick={() => generateOfferPDF(offer, settings ?? { name:"AXEmedia", tagline:"Agjensi Marketingu & Dizajni", address:"Tiranë, Shqipëri", phone:"+355 69 000 0000", email:"info@axemedia.al", taxId:"", website:"www.axemedia.al", logoUrl:"", logoSize: 22, primaryColor: "#009ec6", fontFamily: "helvetica", offerFooter:"Kjo ofertë nuk është faturë. Pagesa nuk kërkohet deri pas konfirmimit." })} className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors">
+          <button onClick={() => generateOfferPDF(offer, settings ?? { name:"AXEmedia", tagline:"Agjensi Marketingu & Dizajni", address:"Tiranë, Shqipëri", phone:"+355 69 000 0000", email:"info@axemedia.al", taxId:"", website:"www.axemedia.al", logoUrl:"", logoSize: 22, primaryColor: "#009ec6", fontFamily: "helvetica", offerFooter:"Kjo ofertë nuk është faturë. Pagesa nuk kërkohet deri pas konfirmimit." })} className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-amber-500 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-amber-600 transition-colors shadow-sm">
             <Download className="w-4 h-4" /> Shkarko PDF
           </button>
         </div>
       </div>
 
       {/* Offer Card */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden" id="offer-print">
         {/* Banner */}
-        <div className="bg-amber-500 px-8 py-6 flex justify-between items-start">
-          <div className="flex items-center gap-4">
+        <div className="bg-amber-500 p-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row justify-between items-start gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {settings?.logoUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={settings.logoUrl} alt="Logo" className="h-12 w-auto object-contain" />
+              <img src={settings.logoUrl} alt="Logo" className="h-10 sm:h-12 w-auto object-contain" />
             )}
             <div>
-              <p className="text-white font-bold text-2xl tracking-tight">{settings?.name || "AXEmedia"}</p>
-              {settings?.tagline && <p className="text-amber-100 text-sm mt-1">{settings.tagline}</p>}
-              {settings?.address && <p className="text-amber-100 text-sm">{settings.address}</p>}
+              <p className="text-white font-bold text-xl sm:text-2xl tracking-tight">{settings?.name || "AXEmedia"}</p>
+              {settings?.tagline && <p className="text-amber-100 text-xs sm:text-sm mt-0.5 sm:mt-1">{settings.tagline}</p>}
+              {settings?.address && <p className="text-amber-100 text-xs sm:text-sm">{settings.address}</p>}
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-white font-bold text-3xl">OFERTË</p>
-            <p className="text-amber-100 text-sm mt-1 font-mono">{offer.offerNumber}</p>
+          <div className="text-left sm:text-right">
+            <p className="text-white font-extrabold text-2xl sm:text-3xl">OFERTË</p>
+            <p className="text-amber-100 text-xs sm:text-sm mt-0.5 sm:mt-1 font-mono">{offer.offerNumber}</p>
             <p className="text-amber-200 text-xs mt-0.5">{offer.title}</p>
           </div>
         </div>
 
         {/* Validity notice */}
-        <div className="bg-amber-50 border-b border-amber-100 px-8 py-3 text-center text-sm text-amber-800 font-medium">
+        <div className="bg-amber-50 border-b border-amber-100 px-4 sm:px-8 py-2.5 sm:py-3 text-center text-xs sm:text-sm text-amber-800 font-medium">
           ⏳ Kjo ofertë është e vlefshme deri më{" "}
           <span className="font-bold">{format(new Date(offer.validUntil), "d MMMM yyyy", { locale: sq })}</span>
         </div>
 
-        <div className="p-8 space-y-6">
+        <div className="p-4 sm:p-8 space-y-6">
           {/* Client + Dates */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ofertë Për</p>
-              <p className="font-bold text-slate-900 text-lg">{offer.client.name}</p>
-              <p className="text-slate-600 text-sm">{offer.client.email}</p>
-              {offer.client.phone   && <p className="text-slate-600 text-sm">{offer.client.phone}</p>}
-              {offer.client.city    && <p className="text-slate-600 text-sm">{offer.client.city}</p>}
-              {offer.client.taxId   && <p className="text-slate-500 text-sm font-medium">NIPT: {offer.client.taxId}</p>}
+              <p className="font-bold text-slate-900 text-base sm:text-lg">{offer.client.name}</p>
+              <p className="text-slate-600 text-xs sm:text-sm">{offer.client.email}</p>
+              {offer.client.phone   && <p className="text-slate-600 text-xs sm:text-sm">{offer.client.phone}</p>}
+              {offer.client.city    && <p className="text-slate-600 text-xs sm:text-sm">{offer.client.city}</p>}
+              {offer.client.taxId   && <p className="text-slate-500 text-xs sm:text-sm font-medium">NIPT: {offer.client.taxId}</p>}
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 justify-center">
               {[
                 { label: "Data Lëshimit",  value: format(new Date(offer.issueDate),  "d MMMM yyyy", { locale: sq }) },
                 { label: "Vlefshme Deri",  value: format(new Date(offer.validUntil), "d MMMM yyyy", { locale: sq }) },
               ].map(({ label, value }) => (
-                <div key={label} className="bg-slate-50 rounded-xl p-3 flex justify-between">
-                  <span className="text-sm text-slate-500">{label}:</span>
-                  <span className="text-sm font-semibold text-slate-800">{value}</span>
+                <div key={label} className="bg-slate-50/80 border border-slate-100 rounded-xl p-3 flex justify-between items-center text-xs sm:text-sm">
+                  <span className="text-slate-500">{label}:</span>
+                  <span className="font-semibold text-slate-800">{value}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Items */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table className="w-full min-w-[520px]">
               <thead>
-                <tr className="bg-slate-50">
+                <tr className="bg-slate-50/90 border-b border-slate-200">
                   {["#","Përshkrimi","Sasia","Çmimi","Total"].map(h => (
                     <th key={h} className={`px-4 py-3 text-xs font-bold text-slate-500 uppercase ${h === "Total" || h === "Çmimi" ? "text-right" : h === "Sasia" ? "text-center" : "text-left"}`}>{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-slate-100">
                 {offer.items.map((item, i) => (
-                  <tr key={item.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3.5 text-sm text-slate-400">{i + 1}</td>
-                    <td className="px-4 py-3.5 text-sm text-slate-800 font-medium">{item.description}</td>
-                    <td className="px-4 py-3.5 text-sm text-slate-600 text-center">{item.quantity}</td>
-                    <td className="px-4 py-3.5 text-sm text-slate-600 text-right">€{item.unitPrice.toFixed(2)}</td>
-                    <td className="px-4 py-3.5 text-sm font-semibold text-slate-900 text-right">€{item.total.toFixed(2)}</td>
+                  <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-400">{i + 1}</td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-800 font-medium">{item.description}</td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 text-center">{item.quantity}</td>
+                    <td className="px-4 py-3 text-xs sm:text-sm text-slate-600 text-right">€{item.unitPrice.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-right">€{item.total.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -614,28 +614,28 @@ export default function OfferDetailPage({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* Totals */}
-          <div className="flex justify-end">
-            <div className="w-72 space-y-2 text-sm">
-              <div className="flex justify-between text-slate-600"><span>Nëntotali:</span><span>€{offer.subtotal.toFixed(2)}</span></div>
-              <div className="flex justify-between text-slate-600"><span>TVSH:</span><span>€{offer.tax.toFixed(2)}</span></div>
-              <div className="border-t border-slate-200 pt-3 mt-2 flex justify-between font-bold text-lg">
+          <div className="flex justify-end pt-2">
+            <div className="w-full sm:w-72 space-y-2 text-xs sm:text-sm bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-xl">
+              <div className="flex justify-between text-slate-600"><span>Nëntotali:</span><span className="font-semibold">€{offer.subtotal.toFixed(2)}</span></div>
+              <div className="flex justify-between text-slate-600"><span>TVSH:</span><span className="font-semibold">€{offer.tax.toFixed(2)}</span></div>
+              <div className="border-t border-slate-200 pt-3 mt-2 flex justify-between font-bold text-sm sm:text-base">
                 <span className="text-slate-900">TOTALI:</span>
-                <span className="text-amber-600">€{offer.total.toFixed(2)}</span>
+                <span className="text-amber-600 font-extrabold text-base sm:text-lg">€{offer.total.toFixed(2)}</span>
               </div>
             </div>
           </div>
 
           {/* Notes */}
           {offer.notes && (
-            <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-              <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-2">Shënime / Kushte</p>
-              <p className="text-sm text-amber-900">{offer.notes}</p>
+            <div className="bg-amber-50/70 rounded-xl p-4 border border-amber-200/60">
+              <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1.5">Shënime / Kushte</p>
+              <p className="text-xs sm:text-sm text-amber-900 whitespace-pre-line">{offer.notes}</p>
             </div>
           )}
 
           {/* Disclaimer */}
           <p className="text-center text-xs text-slate-400 italic border-t border-slate-100 pt-4">
-            Kjo dokument është ofertë dhe nuk përbën faturë. Pagesa nuk kërkohet deri pas konfirmimit me shkrim.
+            Ky dokument është ofertë dhe nuk përbën faturë. Pagesa nuk kërkohet deri pas konfirmimit me shkrim.
           </p>
         </div>
       </div>

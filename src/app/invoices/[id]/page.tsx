@@ -429,65 +429,65 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
   );
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-4xl">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/invoices" className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors"><ArrowLeft className="w-5 h-5" /></Link>
+          <Link href="/invoices" className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors"><ArrowLeft className="w-5 h-5" /></Link>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl font-bold text-slate-900 font-mono">{invoice.invoiceNumber}</h1>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium border ${statusColors[invoice.status]}`}>{statusLabel[invoice.status]}</span>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColors[invoice.status]}`}>{statusLabel[invoice.status]}</span>
             </div>
-            <p className="text-slate-500 text-sm mt-0.5">Lëshuar {format(new Date(invoice.issueDate), "d MMMM yyyy", { locale: sq })}</p>
+            <p className="text-slate-500 text-xs sm:text-sm mt-0.5">Lëshuar {format(new Date(invoice.issueDate), "d MMMM yyyy", { locale: sq })}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {invoice.status === "draft" && (
-            <button onClick={() => updateStatus("sent")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-60">
+            <button onClick={() => updateStatus("sent")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60">
               <Send className="w-4 h-4" /> Shëno Dërguar
             </button>
           )}
           {invoice.status === "sent" && (
-            <button onClick={() => updateStatus("paid")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors disabled:opacity-60">
+            <button onClick={() => updateStatus("paid")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-60">
               <CheckCircle className="w-4 h-4" /> Shëno Paguar
             </button>
           )}
           {(invoice.status === "draft" || invoice.status === "sent") && (
-            <button onClick={() => updateStatus("cancelled")} disabled={updating} className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-60">
+            <button onClick={() => updateStatus("cancelled")} disabled={updating} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-red-100 transition-colors disabled:opacity-60">
               <XCircle className="w-4 h-4" /> Anulo
             </button>
           )}
-          <button onClick={() => window.print()} className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors">
+          <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition-colors">
             <Printer className="w-4 h-4" /> Printo
           </button>
-          <Link href={`/invoices/${invoice.id}/edit`} className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors">
+          <Link href={`/invoices/${invoice.id}/edit`} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-amber-100 transition-colors">
             <Edit2 className="w-4 h-4" /> Ndrysho
           </Link>
-          <button onClick={() => generatePDF(invoice, settings ?? { name:"AXEmedia", tagline:"Agjensi Marketingu & Dizajni", address:"Tiranë, Shqipëri", phone:"+355 69 000 0000", email:"info@axemedia.al", taxId:"", website:"www.axemedia.al", bankAccount:"", swiftCode:"", logoUrl:"", stampUrl:"", stampSize: 55, stampPosX: 0, stampPosY: 0, stampRotate: 0, signatureUrl:"", invoiceFooter:"Faleminderit për bashkëpunimin!", logoSize: 22, primaryColor: "#009ec6", fontFamily: "helvetica" })} className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+          <button onClick={() => generatePDF(invoice, settings ?? { name:"AXEmedia", tagline:"Agjensi Marketingu & Dizajni", address:"Tiranë, Shqipëri", phone:"+355 69 000 0000", email:"info@axemedia.al", taxId:"", website:"www.axemedia.al", bankAccount:"", swiftCode:"", logoUrl:"", stampUrl:"", stampSize: 55, stampPosX: 0, stampPosY: 0, stampRotate: 0, signatureUrl:"", invoiceFooter:"Faleminderit për bashkëpunimin!", logoSize: 22, primaryColor: "#009ec6", fontFamily: "helvetica" })} className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
             <Download className="w-4 h-4" /> Shkarko PDF
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden" id="invoice-print">
-        <div className="p-8">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden" id="invoice-print">
+        <div className="p-4 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
             <div>
-              <p className="text-slate-900 text-3xl font-bold">FATURË/INVOICE #{invoice.invoiceNumber}</p>
+              <p className="text-slate-900 text-xl sm:text-3xl font-extrabold break-all sm:break-normal">FATURË/INVOICE #{invoice.invoiceNumber}</p>
             </div>
-            <div className="flex items-end justify-end">
+            <div className="flex items-center sm:items-end justify-start sm:justify-end">
               {settings?.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={settings.logoUrl} alt="Logo" className="h-14 w-auto object-contain" />
+                <img src={settings.logoUrl} alt="Logo" className="h-10 sm:h-14 w-auto object-contain" />
               ) : null}
             </div>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-3 sm:pr-5">
-            <div className="rounded-3xl bg-slate-50 p-5 shadow-sm border border-slate-100">
-              <p className="text-sm font-semibold text-slate-900 uppercase tracking-[0.12em] mb-4">Detajet e Kompanisë</p>
-              <div className="space-y-1 text-sm text-slate-600">
+          <div className="mt-6 sm:mt-8 grid gap-4 grid-cols-1 sm:grid-cols-3">
+            <div className="rounded-2xl sm:rounded-3xl bg-slate-50/90 p-4 sm:p-5 shadow-sm border border-slate-100">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 sm:mb-4">Detajet e Kompanisë</p>
+              <div className="space-y-1 text-xs sm:text-sm text-slate-600">
                 <p className="font-semibold text-slate-900">{settings?.name}</p>
                 {settings?.tagline && <p>{settings.tagline}</p>}
                 {settings?.taxId && <p>Nr Unik: {settings.taxId}</p>}
@@ -495,9 +495,9 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                 {settings?.swiftCode && <p>SWIFT: {settings.swiftCode}</p>}
               </div>
             </div>
-            <div className="rounded-3xl bg-slate-50 p-5 shadow-sm border border-slate-100">
-              <p className="text-sm font-semibold text-slate-900 uppercase tracking-[0.12em] mb-4">Detajet e Klientit</p>
-              <div className="space-y-1 text-sm text-slate-600">
+            <div className="rounded-2xl sm:rounded-3xl bg-slate-50/90 p-4 sm:p-5 shadow-sm border border-slate-100">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 sm:mb-4">Detajet e Klientit</p>
+              <div className="space-y-1 text-xs sm:text-sm text-slate-600">
                 <p className="font-semibold text-slate-900">{invoice.client.name}</p>
                 <p>{invoice.client.email}</p>
                 {invoice.client.phone && <p>{invoice.client.phone}</p>}
@@ -507,9 +507,9 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                 {invoice.client.taxId && <p>Nr Fiskal: {invoice.client.taxId}</p>}
               </div>
             </div>
-            <div className="rounded-3xl bg-slate-50 p-5 shadow-sm border border-slate-100">
-              <p className="text-sm font-semibold text-slate-900 uppercase tracking-[0.12em] mb-4 whitespace-nowrap">Detajet e Faturës</p>
-              <div className="space-y-1 text-sm text-slate-600">
+            <div className="rounded-2xl sm:rounded-3xl bg-slate-50/90 p-4 sm:p-5 shadow-sm border border-slate-100">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 sm:mb-4">Detajet e Faturës</p>
+              <div className="space-y-1 text-xs sm:text-sm text-slate-600">
                 <p className="font-semibold text-slate-900">Nr Faturës: {invoice.invoiceNumber}</p>
                 <p>Data: {format(new Date(invoice.issueDate), "d MMMM yyyy", { locale: sq })}</p>
                 <p>Statusi: {statusLabel[invoice.status] || invoice.status}</p>
@@ -517,44 +517,59 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          <div className="mt-8 border-t border-slate-200 pt-8 sm:pr-5">
-            <div className="grid grid-cols-12 gap-4 mb-5 pb-3 border-b border-slate-300 text-sm font-semibold text-slate-900">
+          <div className="mt-6 sm:mt-8 border-t border-slate-200 pt-6 sm:pt-8">
+            {/* Desktop Table Header */}
+            <div className="hidden sm:grid grid-cols-12 gap-4 mb-4 pb-2 border-b border-slate-300 text-xs font-bold text-slate-400 uppercase tracking-wider">
               <p className="col-span-6">Shërbimi/Produkti</p>
               <p className="col-span-2 text-right">Çmimi</p>
               <p className="col-span-2 text-right">Sasia</p>
               <p className="col-span-2 text-right">Totali</p>
             </div>
-            <div className="space-y-4">
+
+            <div className="space-y-3">
               {invoice.items.map((item) => (
-                <div key={item.id} className="rounded-3xl bg-slate-50 p-5 grid grid-cols-12 gap-4 items-center text-sm text-slate-700 shadow-sm">
-                  <span className="col-span-6">{item.description}</span>
-                  <span className="col-span-2 text-right">{item.unitPrice.toFixed(2)} €</span>
-                  <span className="col-span-2 text-right">{item.quantity}</span>
-                  <span className="col-span-2 text-right font-semibold text-slate-900">{item.total.toFixed(2)} €</span>
+                <div key={item.id}>
+                  {/* Mobile Item Card */}
+                  <div className="sm:hidden p-3.5 bg-slate-50/90 rounded-xl border border-slate-200/70 space-y-2">
+                    <p className="font-semibold text-slate-900 text-sm">{item.description}</p>
+                    <div className="flex justify-between items-center text-xs text-slate-500 pt-1 border-t border-slate-200/60">
+                      <span>{item.quantity} × {item.unitPrice.toFixed(2)} €</span>
+                      <span className="font-bold text-slate-900 text-sm">{item.total.toFixed(2)} €</span>
+                    </div>
+                  </div>
+
+                  {/* Desktop Item Row */}
+                  <div className="hidden sm:grid rounded-2xl bg-slate-50 p-4 grid-cols-12 gap-4 items-center text-sm text-slate-700 shadow-sm">
+                    <span className="col-span-6 font-medium text-slate-800">{item.description}</span>
+                    <span className="col-span-2 text-right">{item.unitPrice.toFixed(2)} €</span>
+                    <span className="col-span-2 text-right">{item.quantity}</span>
+                    <span className="col-span-2 text-right font-bold text-slate-900">{item.total.toFixed(2)} €</span>
+                  </div>
                 </div>
               ))}
             </div>
-              <div className="mt-5 ml-auto w-full max-w-md rounded-3xl bg-slate-100 p-5 text-sm text-slate-700">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
-                  <span>Nëntotali</span>
-                  <span className="font-semibold tabular-nums">{invoice.subtotal.toFixed(2)} €</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>TVSH</span>
-                  <span className="font-semibold tabular-nums">{invoice.tax.toFixed(2)} €</span>
-                </div>
+
+            <div className="mt-5 ml-auto w-full max-w-md rounded-2xl bg-slate-100 p-4 sm:p-5 text-xs sm:text-sm text-slate-700">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 mb-2.5">
+                <span>Nëntotali</span>
+                <span className="font-semibold tabular-nums">{invoice.subtotal.toFixed(2)} €</span>
               </div>
-              <div className="mt-5 ml-auto w-full max-w-md rounded-2xl bg-lime-500 p-5 flex items-center justify-between font-bold text-white text-base shadow-md">
-                <span>TOTALI</span>
-                <span className="tabular-nums">{invoice.total.toFixed(2)} €</span>
+              <div className="flex items-center justify-between">
+                <span>TVSH</span>
+                <span className="font-semibold tabular-nums">{invoice.tax.toFixed(2)} €</span>
               </div>
             </div>
+            <div className="mt-3 ml-auto w-full max-w-md rounded-2xl bg-lime-500 p-4 sm:p-5 flex items-center justify-between font-bold text-white text-base shadow-md">
+              <span>TOTALI</span>
+              <span className="tabular-nums text-lg sm:text-xl font-extrabold">{invoice.total.toFixed(2)} €</span>
+            </div>
+          </div>
 
-          <div className="mt-10">
-            <div className="grid gap-4 sm:grid-cols-2 items-start">
+          <div className="mt-8 sm:mt-10">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 items-start">
               <div>
-                <div className="mb-2 text-xs text-slate-500">Dorëzoi - Give</div>
-                <div className="relative rounded-3xl bg-white p-4 border border-slate-200 shadow-sm h-32 overflow-hidden">
+                <div className="mb-2 text-xs font-semibold text-slate-500">Dorëzoi - Give</div>
+                <div className="relative rounded-2xl bg-white p-4 border border-slate-200 shadow-sm h-28 sm:h-32 overflow-hidden flex items-center justify-center">
                   {settings?.stampUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -569,50 +584,50 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                       }}
                     />
                   ) : (
-                    <span className="text-slate-300">Stampë</span>
+                    <span className="text-slate-300 text-xs">Stampë</span>
                   )}
                 </div>
               </div>
               <div>
-                <div className="mb-2 text-xs text-slate-500 text-center">Pranoi - Accept</div>
-                <div className="rounded-3xl bg-white p-4 border border-slate-200 shadow-sm h-32 overflow-hidden flex items-center justify-center">
+                <div className="mb-2 text-xs font-semibold text-slate-500 text-left sm:text-center">Pranoi - Accept</div>
+                <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm h-28 sm:h-32 overflow-hidden flex items-center justify-center">
                   {settings?.signatureUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={settings.signatureUrl} alt="Nënshkrim" className="max-h-20 object-contain" />
+                    <img src={settings.signatureUrl} alt="Nënshkrim" className="max-h-16 sm:max-h-20 object-contain" />
                   ) : (
                     <div className="h-10" />
                   )}
                 </div>
               </div>
             </div>
-            <div className="mt-3 grid gap-4 sm:grid-cols-2 text-slate-600 text-sm">
+            <div className="mt-3 grid gap-4 grid-cols-1 sm:grid-cols-2 text-slate-600 text-xs sm:text-sm">
               <div className="border-t border-slate-300 pt-2 text-center">Dorëzoi</div>
               <div className="border-t border-slate-300 pt-2 text-center">
                 <p>Pranoi</p>
-                <p className="mt-1">{format(new Date(invoice.issueDate), "dd MMM yyyy", { locale: sq })}</p>
+                <p className="mt-1 font-mono text-xs">{format(new Date(invoice.issueDate), "dd MMM yyyy", { locale: sq })}</p>
               </div>
             </div>
           </div>
 
           {notesText && (
-            <div className="mt-10">
-              <p className="text-lg font-bold text-slate-900">Shënime</p>
-              <p className="mt-3 text-sm text-slate-600 leading-6 whitespace-pre-line">{notesText}</p>
+            <div className="mt-8 sm:mt-10">
+              <p className="text-base sm:text-lg font-bold text-slate-900">Shënime</p>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line bg-slate-50/80 p-3.5 rounded-xl border border-slate-100">{notesText}</p>
             </div>
           )}
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3 text-[11px] text-slate-500">
+          <div className="mt-8 sm:mt-10 grid gap-4 grid-cols-1 sm:grid-cols-3 text-[11px] text-slate-500 border-t border-slate-100 pt-6">
             <div className="space-y-1">
               <p className="font-semibold text-slate-900">{settings?.name}</p>
               {settings?.tagline && <p>{settings.tagline}</p>}
               {settings?.address && <p>{settings.address}</p>}
             </div>
-            <div className="space-y-1 text-center">
+            <div className="space-y-1 text-left sm:text-center">
               {settings?.taxId && <p>Nr Unik: {settings.taxId}</p>}
               {settings?.bankAccount && <p>Reiffeisen Bank: {settings.bankAccount}</p>}
               {settings?.swiftCode && <p>SWIFT: {settings.swiftCode}</p>}
             </div>
-            <div className="space-y-1 text-right">
+            <div className="space-y-1 text-left sm:text-right">
               {settings?.phone && <p>{settings.phone}</p>}
               {settings?.website && <p>{settings.website}</p>}
               {settings?.email && <p>{settings.email}</p>}

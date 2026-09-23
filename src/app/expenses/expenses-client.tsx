@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2, TrendingDown, TrendingUp, Edit2, Check, X, Printer } from "lucide-react";
@@ -147,69 +147,69 @@ export default function ExpensesClient({ initialExpenses, categories }: { initia
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Shpenzimet</h1>
-          <p className="text-slate-500 text-sm mt-1">{expenses.length} shpenzime te regjistruara</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Shpenzimet</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">{expenses.length} shpenzime të regjistruara</p>
         </div>
-        <div className="flex items-center gap-2 self-start">
-          <button onClick={handlePrintList} className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors shadow-sm">
-            <Printer className="w-4 h-4" /> Printo Listen
+        <div className="flex items-center gap-2 flex-wrap">
+          <button onClick={handlePrintList} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition-colors shadow-sm cursor-pointer">
+            <Printer className="w-4 h-4" /> Printo Listën
           </button>
-          <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm">
+          <button onClick={() => { resetForm(); setShowForm(true); }} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-600/20 cursor-pointer">
             <Plus className="w-4 h-4" /> Shto Shpenzim
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"><div className="flex items-center gap-3"><div className="bg-rose-100 rounded-xl p-3"><TrendingDown className="w-5 h-5 text-rose-600" /></div><div><p className="text-xs text-slate-500 font-medium">Ky Muaj</p><p className="text-xl font-bold text-slate-900">EUR {totalThisMonth.toFixed(2)}</p></div></div></div>
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"><div className="flex items-center gap-3"><div className="bg-slate-100 rounded-xl p-3"><TrendingUp className="w-5 h-5 text-slate-600" /></div><div><p className="text-xs text-slate-500 font-medium">Gjithsej</p><p className="text-xl font-bold text-slate-900">EUR {totalAll.toFixed(2)}</p></div></div></div>
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"><div className="flex items-center gap-3"><div className="bg-indigo-100 rounded-xl p-3"><TrendingDown className="w-5 h-5 text-indigo-600" /></div><div><p className="text-xs text-slate-500 font-medium">Mesatare/Muaj</p><p className="text-xl font-bold text-slate-900">EUR {expenses.length ? (totalAll / Math.max(1, new Set(expenses.map((expense) => expense.date.slice(0, 7))).size)).toFixed(2) : "0.00"}</p></div></div></div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5"><div className="flex items-center gap-3"><div className="bg-rose-100 rounded-xl p-3"><TrendingDown className="w-5 h-5 text-rose-600" /></div><div><p className="text-xs text-slate-500 font-medium">Ky Muaj</p><p className="text-xl sm:text-2xl font-bold text-slate-900">EUR {totalThisMonth.toFixed(2)}</p></div></div></div>
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5"><div className="flex items-center gap-3"><div className="bg-slate-100 rounded-xl p-3"><TrendingUp className="w-5 h-5 text-slate-600" /></div><div><p className="text-xs text-slate-500 font-medium">Gjithsej</p><p className="text-xl sm:text-2xl font-bold text-slate-900">EUR {totalAll.toFixed(2)}</p></div></div></div>
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5"><div className="flex items-center gap-3"><div className="bg-indigo-100 rounded-xl p-3"><TrendingDown className="w-5 h-5 text-indigo-600" /></div><div><p className="text-xs text-slate-500 font-medium">Mesatare/Muaj</p><p className="text-xl sm:text-2xl font-bold text-slate-900">EUR {expenses.length ? (totalAll / Math.max(1, new Set(expenses.map((expense) => expense.date.slice(0, 7))).size)).toFixed(2) : "0.00"}</p></div></div></div>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-6">
-          <h2 className="font-semibold text-slate-900 mb-4">{editId ? "Edito Shpenzimin" : "Shto Shpenzim te Ri"}</h2>
-          {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-4 sm:p-6 animate-in fade-in duration-150">
+          <h2 className="font-bold text-slate-900 mb-4 text-base sm:text-lg">{editId ? "Ndrysho Shpenzimin" : "Shto Shpenzim të Ri"}</h2>
+          {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-xs sm:text-sm">{error}</div>}
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Titulli *</label>
-              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Titulli *</label>
+              <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Shuma (EUR) *</label>
-              <input type="number" step="0.01" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} required className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Shuma (EUR) *</label>
+              <input type="number" step="0.01" min="0" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} required className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Kategoria *</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">{categories.map((category) => <option key={category}>{category}</option>)}</select>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Kategoria *</label>
+              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500">{categories.map((category) => <option key={category}>{category}</option>)}</select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Data</label>
-              <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Data</label>
+              <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500" />
             </div>
             <div className="sm:col-span-2 lg:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Shenime</label>
-              <input type="text" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Opsionale..." className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Shënime</label>
+              <input type="text" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Opsionale..." className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500" />
             </div>
-            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2">
-              <button type="button" onClick={resetForm} className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm hover:bg-slate-50 transition-colors"><X className="w-4 h-4" /> Anulo</button>
-              <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors disabled:opacity-60"><Check className="w-4 h-4" />{saving ? "Duke ruajtur..." : editId ? "Ruaj Ndryshimet" : "Shto Shpenzimin"}</button>
+            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2 pt-2">
+              <button type="button" onClick={resetForm} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 transition-colors"><X className="w-4 h-4" /> Anulo</button>
+              <button type="submit" disabled={saving} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-600/20 disabled:opacity-60"><Check className="w-4 h-4" />{saving ? "Duke ruajtur..." : editId ? "Ruaj Ndryshimet" : "Shto Shpenzimin"}</button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => setFilterCategory("all")} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterCategory === "all" ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"}`}>Te gjitha</button>
-        {categories.map((category) => <button key={category} onClick={() => setFilterCategory(category)} className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterCategory === category ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"}`}>{category}</button>)}
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
+        <button onClick={() => setFilterCategory("all")} className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${filterCategory === "all" ? "bg-indigo-600 text-white shadow-sm" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"}`}>Të gjitha</button>
+        {categories.map((category) => <button key={category} onClick={() => setFilterCategory(category)} className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${filterCategory === category ? "bg-indigo-600 text-white shadow-sm" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"}`}>{category}</button>)}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[620px]">
             <thead>
               <tr className="bg-slate-50 text-left border-b border-slate-100">
                 {["Data", "Titulli", "Kategoria", "Shuma", "Shenime", "Veprime"].map((h) => <th key={h} className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">{h}</th>)}

@@ -106,11 +106,11 @@ export default function ServicesClient({
   const units = ["orë", "copë", "ditë", "muaj", "faqe", "video", "projekt", "paketë"];
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Shërbimet & Produktet / Llifta</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Shërbimet & Produktet / Llifta</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
             Konfiguro çmimet për çdo lift sipas orëve (1 orë = 70€, 2-5 orë = 60€, 5-8 orë = 50€) ose çmime standarde
           </p>
         </div>
@@ -119,46 +119,46 @@ export default function ServicesClient({
             cancelEdit();
             setShowAdd(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm self-start"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-600/20 cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Shërbim / Lift i Ri
         </button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-4 sm:p-5 space-y-4 animate-in fade-in duration-150">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <h2 className="font-bold text-slate-900 flex items-center gap-2 text-base">
               <Plus className="w-4 h-4 text-indigo-600" /> Shto Shërbim / Lift të Ri
             </h2>
             <button
               type="button"
               onClick={applyLiftPreset}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-xs font-semibold hover:bg-amber-100 transition-colors"
+              className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs font-semibold hover:bg-amber-100 transition-colors cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Vendos Çmimet e Liftit (70€ / 60€ / 50€)
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>}
+          {error && <p className="text-xs sm:text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-slate-600 mb-1">Emri * (p.sh. Lifti 1)</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">Emri * (p.sh. Lifti 1)</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="P.sh. Lifti 1 ose Shërbim me Lift"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Njësia</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">Njësia</label>
               <select
                 value={form.unit}
                 onChange={(e) => setForm({ ...form, unit: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               >
                 {units.map((unit) => (
                   <option key={unit}>{unit}</option>
@@ -166,19 +166,19 @@ export default function ServicesClient({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Çmimi Default (€)</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">Çmimi Default (€)</label>
               <input
                 type="number"
                 step="0.01"
                 min="0"
                 value={form.defaultPrice}
                 onChange={(e) => setForm({ ...form, defaultPrice: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
 
             {/* Hourly Tier Configuration */}
-            <div className="sm:col-span-4 bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+            <div className="sm:col-span-4 bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 space-y-2">
               <div className="flex items-center gap-2 text-slate-800 font-semibold text-xs uppercase tracking-wide">
                 <Clock className="w-4 h-4 text-indigo-600" />
                 Shkallëzimi i Çmimit sipas Orëve (Për Llifta)
@@ -188,7 +188,7 @@ export default function ServicesClient({
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">1 Orë (€/orë)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">1 Orë (€/orë)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -196,11 +196,11 @@ export default function ServicesClient({
                     placeholder="70"
                     value={form.price1h}
                     onChange={(e) => setForm({ ...form, price1h: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">2 - 5 Orë (€/orë)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">2 - 5 Orë (€/orë)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -208,11 +208,11 @@ export default function ServicesClient({
                     placeholder="60"
                     value={form.price2to5h}
                     onChange={(e) => setForm({ ...form, price2to5h: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">5 - 8 Orë / 5+ Orë (€/orë)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">5 - 8 Orë / 5+ Orë (€/orë)</label>
                   <input
                     type="number"
                     step="0.01"
@@ -220,19 +220,19 @@ export default function ServicesClient({
                     placeholder="50"
                     value={form.price5to8h}
                     onChange={(e) => setForm({ ...form, price5to8h: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800"
                   />
                 </div>
               </div>
             </div>
 
             <div className="sm:col-span-4">
-              <label className="block text-xs font-medium text-slate-600 mb-1">Përshkrimi (opsional)</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1">Përshkrimi (opsional)</label>
               <input
                 type="text"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
 
@@ -240,7 +240,7 @@ export default function ServicesClient({
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="flex items-center gap-1.5 px-3 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm hover:bg-slate-50"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 cursor-pointer"
               >
                 <X className="w-4 h-4" /> Anulo
               </button>
@@ -248,7 +248,7 @@ export default function ServicesClient({
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-60 font-medium"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 shadow-sm shadow-indigo-600/20 disabled:opacity-60 cursor-pointer"
               >
                 <Check className="w-4 h-4" /> {saving ? "Duke ruajtur..." : "Ruaj Shërbimin"}
               </button>
@@ -257,9 +257,9 @@ export default function ServicesClient({
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-left">
                 <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Emri</th>

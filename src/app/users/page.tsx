@@ -197,21 +197,21 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Users className="w-6 h-6" />
+          <div className="w-11 h-11 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Menaxhimi i Përdoruesve</h1>
-            <p className="text-sm text-slate-500">Krijoni llogari, caktoni role dhe menaxhoni të drejtat e hyrjes</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Menaxhimi i Përdoruesve</h1>
+            <p className="text-xs sm:text-sm text-slate-500">Krijoni llogari, caktoni role dhe menaxhoni të drejtat e hyrjes</p>
           </div>
         </div>
         <button
           onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-md shadow-indigo-600/20 transition-all cursor-pointer active:scale-95"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-indigo-600/20 transition-all cursor-pointer active:scale-95"
         >
           <UserPlus className="w-4 h-4" />
           Përdorues i Ri
@@ -310,7 +310,7 @@ export default function UsersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-left text-sm min-w-[620px]">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/75 text-xs uppercase tracking-wider text-slate-500 font-semibold">
                   <th className="py-3.5 px-4">Përdoruesi</th>

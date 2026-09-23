@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { Plus, Check, X, Trash2, Edit2, CheckCircle2, Circle, Printer } from "lucide-react";
@@ -255,68 +255,68 @@ export default function TodosClient({ initialTasks, clients }: { initialTasks: T
   };
 
   return (
-    <div className="p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">TO DO</h1>
-          <p className="text-slate-500 text-sm mt-1">Menaxho detyrat e tua ditore</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">TO DO</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">Menaxho detyrat e tua ditore</p>
         </div>
-        <div className="flex items-center gap-2 self-start">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={printList}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors shadow-sm"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-200 transition-colors shadow-sm cursor-pointer"
           >
-            <Printer className="w-4 h-4" /> Printo Listen
+            <Printer className="w-4 h-4" /> Printo Listën
           </button>
           <button
             onClick={() => {
               resetForm();
               setShowForm(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-600/20 cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Shto Task
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5">
           <p className="text-xs text-slate-500 font-medium">Gjithsej</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{tasks.length}</p>
+          <p className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">{tasks.length}</p>
         </div>
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
+        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 sm:p-5">
           <p className="text-xs text-amber-600 font-medium">Open</p>
-          <p className="text-2xl font-bold text-amber-800 mt-1">{openCount}</p>
+          <p className="text-xl sm:text-2xl font-bold text-amber-800 mt-1">{openCount}</p>
         </div>
-        <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+        <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 sm:p-5">
           <p className="text-xs text-emerald-600 font-medium">Done</p>
-          <p className="text-2xl font-bold text-emerald-800 mt-1">{doneCount}</p>
+          <p className="text-xl sm:text-2xl font-bold text-emerald-800 mt-1">{doneCount}</p>
         </div>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-6">
-          <h2 className="font-semibold text-slate-900 mb-4">{editId ? "Edito Task" : "Shto Task"}</h2>
-          {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
+        <div className="bg-white rounded-2xl border border-indigo-200 shadow-sm p-4 sm:p-6 animate-in fade-in duration-150">
+          <h2 className="font-bold text-slate-900 mb-4 text-base sm:text-lg">{editId ? "Ndrysho Task" : "Shto Task të Ri"}</h2>
+          {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-xs sm:text-sm">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Titulli *</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Titulli *</label>
               <input
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 required
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Prioriteti</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Prioriteti</label>
               <select
                 value={form.priority}
                 onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               >
                 <option value="low">I ulët</option>
                 <option value="medium">Mesatar</option>
@@ -324,22 +324,22 @@ export default function TodosClient({ initialTasks, clients }: { initialTasks: T
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Statusi</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Statusi</label>
               <select
                 value={form.status}
                 onChange={(e) => setForm({ ...form, status: e.target.value })}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               >
                 <option value="open">Open</option>
                 <option value="done">Done</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Klienti</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Klienti</label>
               <select
                 value={form.clientId}
                 onChange={(e) => setForm({ ...form, clientId: e.target.value })}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               >
                 <option value="">Pa klient</option>
                 {clients.map((client) => (
@@ -350,36 +350,37 @@ export default function TodosClient({ initialTasks, clients }: { initialTasks: T
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Due Date</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Due Date</label>
               <input
                 type="date"
                 value={form.dueDate}
                 onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
             <div className="sm:col-span-2 lg:col-span-3">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Përshkrimi</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Përshkrimi</label>
               <input
                 type="text"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Shënime për detyrën..."
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
               />
             </div>
 
-            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2">
+            <div className="sm:col-span-2 lg:col-span-3 flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={resetForm}
-                className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm hover:bg-slate-50 transition-colors"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 transition-colors"
               >
                 <X className="w-4 h-4" /> Anulo
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors disabled:opacity-60"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-600/20 disabled:opacity-60"
               >
                 <Check className="w-4 h-4" /> {saving ? "Duke ruajtur..." : editId ? "Ruaj Ndryshimet" : "Shto Task"}
               </button>
@@ -388,36 +389,36 @@ export default function TodosClient({ initialTasks, clients }: { initialTasks: T
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         <button
           onClick={() => setFilterStatus("all")}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-            filterStatus === "all" ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-600"
+          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+            filterStatus === "all" ? "bg-indigo-600 text-white shadow-sm" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"
           }`}
         >
           Të gjitha
         </button>
         <button
           onClick={() => setFilterStatus("open")}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-            filterStatus === "open" ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-600"
+          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+            filterStatus === "open" ? "bg-indigo-600 text-white shadow-sm" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"
           }`}
         >
           Open
         </button>
         <button
           onClick={() => setFilterStatus("done")}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-            filterStatus === "done" ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-600"
+          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+            filterStatus === "done" ? "bg-indigo-600 text-white shadow-sm" : "bg-white border border-slate-200 text-slate-600 hover:border-indigo-300"
           }`}
         >
           Done
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-slate-50 text-left border-b border-slate-100">
                 {[

@@ -148,133 +148,195 @@ export default function EditOfferPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-8 space-y-6 max-w-4xl">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <Link href={`/offers/${id}`} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors">
+        <Link href={`/offers/${id}`} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Ndrysho Ofertën</h1>
-          <p className="text-slate-500 text-sm mt-0.5">Edito të gjitha të dhënat e ofertës</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Ndrysho Ofertën</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">Edito të gjitha të dhënat e ofertës</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">{error}</div>}
 
         {/* Details */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <h2 className="font-semibold text-slate-900 mb-4">Detajet e Ofertës</h2>
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6">
+          <h2 className="font-semibold text-slate-900 mb-4 text-sm sm:text-base">Detajet e Ofertës</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Titulli *</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Titulli *</label>
               <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required
                 placeholder="p.sh. Ofertë Menaxhim Media Sociale"
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Statusi</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Statusi</label>
               <select value={status} onChange={(e) => setStatus(e.target.value)}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               >
                 {statusOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Klienti *</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Klienti *</label>
               <select value={clientId} onChange={(e) => setClientId(e.target.value)} required
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               >
                 <option value="">— Zgjidh klientin —</option>
                 {clients.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.email})</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">TVSH (%)</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">TVSH (%)</label>
               <input type="number" value={taxRate} onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
                 min={0} max={100}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Data e Lëshimit</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Data e Lëshimit</label>
               <input type="date" value={issueDate} onChange={(e) => setIssueDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Vlefshme Deri *</label>
+              <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Vlefshme Deri *</label>
               <input type="date" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} required
-                className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
               />
             </div>
           </div>
         </div>
 
         {/* Line Items */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-slate-900">Artikujt</h2>
+            <div>
+              <h2 className="font-semibold text-slate-900 text-sm sm:text-base">Artikujt</h2>
+              <p className="text-xs text-slate-500">Përditëso artikujt dhe çmimet</p>
+            </div>
             <button type="button" onClick={addItem}
-              className="flex items-center gap-1.5 text-sm text-amber-600 hover:text-amber-700 font-medium"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
             >
-              <Plus className="w-4 h-4" /> Shto Rresht
+              <Plus className="w-3.5 h-3.5" /> Shto Rresht
             </button>
           </div>
           <div className="space-y-3">
-            <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-slate-500 uppercase px-2">
+            {/* Desktop Header */}
+            <div className="hidden sm:grid grid-cols-12 gap-2 text-xs font-semibold text-slate-400 uppercase tracking-wider px-2">
               <div className="col-span-5">Përshkrimi</div>
               <div className="col-span-2">Sasia</div>
               <div className="col-span-2">Çmimi (€)</div>
-              <div className="col-span-2 text-right">Total</div>
+              <div className="col-span-2 text-right">Totali</div>
               <div className="col-span-1" />
             </div>
+
             {items.map((item, i) => (
-              <div key={i} className="grid grid-cols-12 gap-2 items-center bg-slate-50 rounded-lg p-2">
-                <div className="col-span-5">
-                  <ServiceAutocomplete
-                    value={item.description}
-                    onChange={(v) => updateItem(i, "description", v)}
-                    onSelect={(name, price, svc) => {
-                      setItems((prev) =>
-                        prev.map((it, idx) => {
-                          if (idx !== i) return it;
-                          const matchingSvc = svc || services.find((s) => s.name.toLowerCase() === name.toLowerCase());
-                          const unitPrice = matchingSvc ? calculateServiceUnitPrice(matchingSvc, it.quantity) : price;
-                          return { ...it, description: name, unitPrice };
-                        })
-                      );
-                    }}
-                    services={services}
-                    placeholder="Shërbimi / Produkti"
-                    required
-                  />
+              <div key={i}>
+                {/* Mobile View */}
+                <div className="sm:hidden p-3.5 bg-slate-50/90 rounded-xl border border-slate-200/70 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-slate-500">Artikulli #{i + 1}</span>
+                    {items.length > 1 && (
+                      <button type="button" onClick={() => removeItem(i)}
+                        className="p-1 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Përshkrimi</label>
+                    <ServiceAutocomplete
+                      value={item.description}
+                      onChange={(v) => updateItem(i, "description", v)}
+                      onSelect={(name, price, svc) => {
+                        setItems((prev) =>
+                          prev.map((it, idx) => {
+                            if (idx !== i) return it;
+                            const matchingSvc = svc || services.find((s) => s.name.toLowerCase() === name.toLowerCase());
+                            const unitPrice = matchingSvc ? calculateServiceUnitPrice(matchingSvc, it.quantity) : price;
+                            return { ...it, description: name, unitPrice };
+                          })
+                        );
+                      }}
+                      services={services}
+                      placeholder="Shërbimi / Produkti"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Sasia</label>
+                      <input type="number" min={0.01} step="0.01" value={item.quantity}
+                        onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)} required
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-600 mb-1">Çmimi (€)</label>
+                      <input type="number" min={0} step="0.01" value={item.unitPrice}
+                        onChange={(e) => updateItem(i, "unitPrice", parseFloat(e.target.value) || 0)} required
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-xs">
+                    <span className="text-slate-500">Nëntotali rreshtit:</span>
+                    <span className="font-bold text-slate-900 text-sm">€{(item.quantity * item.unitPrice).toFixed(2)}</span>
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <input type="number" min={0.01} step="0.01" value={item.quantity}
-                    onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)} required
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  />
-                </div>
-                <div className="col-span-2">
-                  <input type="number" min={0} step="0.01" value={item.unitPrice}
-                    onChange={(e) => updateItem(i, "unitPrice", parseFloat(e.target.value) || 0)} required
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  />
-                </div>
-                <div className="col-span-2 text-right text-sm font-semibold text-slate-700 pr-2">
-                  €{(item.quantity * item.unitPrice).toFixed(2)}
-                </div>
-                <div className="col-span-1 flex justify-end">
-                  {items.length > 1 && (
-                    <button type="button" onClick={() => removeItem(i)}
-                      className="p-1 text-slate-400 hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
+
+                {/* Desktop View */}
+                <div className="hidden sm:grid grid-cols-12 gap-2 items-center bg-slate-50/80 rounded-xl p-2 border border-slate-200/60">
+                  <div className="col-span-5">
+                    <ServiceAutocomplete
+                      value={item.description}
+                      onChange={(v) => updateItem(i, "description", v)}
+                      onSelect={(name, price, svc) => {
+                        setItems((prev) =>
+                          prev.map((it, idx) => {
+                            if (idx !== i) return it;
+                            const matchingSvc = svc || services.find((s) => s.name.toLowerCase() === name.toLowerCase());
+                            const unitPrice = matchingSvc ? calculateServiceUnitPrice(matchingSvc, it.quantity) : price;
+                            return { ...it, description: name, unitPrice };
+                          })
+                        );
+                      }}
+                      services={services}
+                      placeholder="Shërbimi / Produkti"
+                      required
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <input type="number" min={0.01} step="0.01" value={item.quantity}
+                      onChange={(e) => updateItem(i, "quantity", parseFloat(e.target.value) || 0)} required
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <input type="number" min={0} step="0.01" value={item.unitPrice}
+                      onChange={(e) => updateItem(i, "unitPrice", parseFloat(e.target.value) || 0)} required
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                  <div className="col-span-2 text-right text-sm font-semibold text-slate-700 pr-2">
+                    €{(item.quantity * item.unitPrice).toFixed(2)}
+                  </div>
+                  <div className="col-span-1 flex justify-end">
+                    {items.length > 1 && (
+                      <button type="button" onClick={() => removeItem(i)}
+                        className="p-1 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -282,33 +344,33 @@ export default function EditOfferPage() {
 
           {/* Totals */}
           <div className="mt-5 pt-4 border-t border-slate-100 flex justify-end">
-            <div className="w-64 space-y-2 text-sm">
-              <div className="flex justify-between text-slate-600"><span>Nëntotali:</span><span>€{subtotal.toFixed(2)}</span></div>
-              <div className="flex justify-between text-slate-600"><span>TVSH ({taxRate}%):</span><span>€{tax.toFixed(2)}</span></div>
+            <div className="w-full sm:w-64 space-y-2 text-sm bg-slate-50 sm:bg-transparent p-3 sm:p-0 rounded-xl">
+              <div className="flex justify-between text-slate-600"><span>Nëntotali:</span><span className="font-semibold">€{subtotal.toFixed(2)}</span></div>
+              <div className="flex justify-between text-slate-600"><span>TVSH ({taxRate}%):</span><span className="font-semibold">€{tax.toFixed(2)}</span></div>
               <div className="flex justify-between font-bold text-slate-900 text-base border-t border-slate-200 pt-2 mt-2">
-                <span>TOTALI:</span><span className="text-amber-700">€{total.toFixed(2)}</span>
+                <span>TOTALI:</span><span className="text-amber-700 font-extrabold">€{total.toFixed(2)}</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Notes */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Shënime</label>
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6">
+          <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Shënime</label>
           <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)}
             placeholder="Kushtet e ofertës, termat e pagesës..."
-            className="w-full px-3.5 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 resize-none"
           />
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex flex-col sm:flex-row justify-end gap-2.5 sm:gap-3 pt-2">
           <Link href={`/offers/${id}`}
-            className="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+            className="flex-1 sm:flex-none text-center px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 transition-colors"
           >
             Anulo
           </Link>
           <button type="submit" disabled={saving}
-            className="flex items-center gap-2 px-5 py-2.5 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors disabled:opacity-60 shadow-sm"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-amber-700 transition-colors disabled:opacity-60 shadow-sm shadow-amber-600/20 cursor-pointer"
           >
             <Save className="w-4 h-4" />
             {saving ? "Duke ruajtur..." : "Ruaj Ndryshimet"}
