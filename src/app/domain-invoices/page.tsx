@@ -2,6 +2,9 @@ import { prisma } from "@/lib/prisma";
 import type { DomainInvoice } from "@prisma/client";
 import DomainInvoicesClient from "./domain-invoices-client";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function DomainInvoicesPage() {
   const domainInvoiceDelegate = (prisma as typeof prisma & {
     domainInvoice?: { findMany: (args: { orderBy: { updatedAt: "desc" } }) => Promise<DomainInvoice[]> };

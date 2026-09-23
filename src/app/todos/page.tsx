@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import TodosClient from "./todos-client";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function TodosPage() {
   const todoDelegate = (prisma as unknown as {
     todoTask?: {

@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import ClientsClient from "./clients-client";
 
+export const dynamic = "force-dynamic";
+
+
 type ClientViewModel = {
   id: number;
   name: string;

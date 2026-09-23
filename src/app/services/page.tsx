@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import ServicesClient from "./services-client";
 
+export const dynamic = "force-dynamic";
+
+
 const emptyForm = {
   name: "",
   description: "",

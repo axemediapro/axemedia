@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import ExpensesClient from "./expenses-client";
 
+export const dynamic = "force-dynamic";
+
+
 const categories = [
   "Qira", "Utilities", "Software", "Marketing", "Pagat", "Transport",
   "Ushqim", "Pajisje", "Kontabilitet", "Ligjore", "Tjetër"

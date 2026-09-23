@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import OffersClient from "./offers-client";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function OffersPage() {
   const offers = await prisma.offer.findMany({
     orderBy: { issueDate: "desc" },

@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import DomainsClient from "./domains-client";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function DomainsPage() {
   const reminders = await prisma.domainReminder.findMany({ orderBy: { nextDueDate: "asc" } });
   const initialReminders = reminders.map((item) => ({

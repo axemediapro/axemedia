@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import DashboardClient from "./dashboard-client";
 
+export const dynamic = "force-dynamic";
+
+
 interface Stats {
   totalClients: number;
   totalInvoices: number;

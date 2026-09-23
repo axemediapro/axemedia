@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import CalendarClient from "./calendar-client";
 
+export const dynamic = "force-dynamic";
+
+
 export default async function CalendarPage() {
   const [posts, clients] = await Promise.all([
     prisma.post.findMany({ orderBy: { scheduledAt: "asc" }, include: { client: { select: { id: true, name: true } } } }),

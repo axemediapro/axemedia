@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import SettingsClient from "./settings-client";
 
+export const dynamic = "force-dynamic";
+
+
 interface Settings {
   name: string;
   tagline: string;
