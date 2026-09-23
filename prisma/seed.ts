@@ -1,9 +1,12 @@
 /// <reference types="node" />
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 import bcrypt from "bcryptjs";
-import path from "path";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 type PrismaSeedClient = PrismaClient & {
   domainReminder: {
@@ -11,11 +14,10 @@ type PrismaSeedClient = PrismaClient & {
   };
 };
 
-const dbPath = path.join(process.cwd(), "prisma", "axemedia.db");
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter }) as PrismaSeedClient;
 
-const rawConnectionString = process.env.DATABASE_URL ?? `file:${dbPath}`;
-const adapter = new PrismaBetterSqlite3({ url: rawConnectionString.includes("dev.db") ? `file:${dbPath}` : rawConnectionString });
-const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof PrismaClient>[0]) as PrismaSeedClient;
 
 async function main() {
   console.log("🌱 Duke shtuar të dhëna demo...");
@@ -267,5 +269,13 @@ async function main() {
 }
 
 main()
-  .catch((e) => { console.error(e); process.exit(1); })
-  .finally(() => prisma.$disconnect());
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    await pool.end();
+  });
+
+
