@@ -1,12 +1,7 @@
 /// <reference types="node" />
 
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import path from "path";
 
 type PrismaSeedClient = PrismaClient & {
   domainReminder: {
@@ -14,8 +9,11 @@ type PrismaSeedClient = PrismaClient & {
   };
 };
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
+const dbPath = path.join(process.cwd(), "prisma", "axemedia.db");
+const connectionUrl = process.env.DATABASE_URL?.startsWith("file:")
+  ? process.env.DATABASE_URL
+  : `file:${dbPath}`;
+const adapter = new PrismaBetterSqlite3({ url: connectionUrl });
 const prisma = new PrismaClient({ adapter }) as PrismaSeedClient;
 
 
@@ -275,7 +273,6 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-    await pool.end();
   });
 
 

@@ -4,6 +4,22 @@ import { Users, FileText, TrendingUp, TrendingDown, Plus, ArrowUpRight, ListTodo
 import Link from "next/link";
 import { format } from "date-fns";
 import { sq } from "date-fns/locale";
+import { useState } from "react";
+import TodoWidget from "@/components/TodoWidget";
+
+type DashboardTodo = {
+  id: number;
+  title: string;
+  description: string | null;
+  priority: string;
+  status: string;
+  clientId: number | null;
+  client: { id: number; name: string } | null;
+  assignedTo: { id: number; name: string } | null;
+  dueDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
 
 interface Stats {
   totalClients: number;
@@ -12,6 +28,10 @@ interface Stats {
   totalExpenses: number;
   todoOpen: number;
   todoDone: number;
+  todos: DashboardTodo[];
+  todoTotalToday: number;
+  todoCompletedToday: number;
+  clients: { id: number; name: string }[];
   recentInvoices: { id: number; invoiceNumber: string; total: number; status: string; createdAt: string; client: { name: string } }[];
 }
 
@@ -30,13 +50,15 @@ const statusLabel: Record<string, string> = {
 };
 
 export default function DashboardClient({ stats }: { stats: Stats }) {
+  const [todoOpen, setTodoOpen] = useState(stats.todoOpen);
+  const [todoDone, setTodoDone] = useState(stats.todoDone);
   const cards = [
     { title: "Klientë Total", value: stats.totalClients, icon: Users, color: "bg-indigo-500", href: "/clients" },
     { title: "Fatura Total", value: stats.totalInvoices, icon: FileText, color: "bg-violet-500", href: "/invoices" },
     { title: "Të Ardhura", value: `${stats.totalRevenue.toFixed(2)} EUR`, icon: TrendingUp, color: "bg-emerald-500", href: "/invoices" },
     { title: "Shpenzime", value: `${stats.totalExpenses.toFixed(2)} EUR`, icon: TrendingDown, color: "bg-rose-500", href: "/expenses" },
-    { title: "TO DO Open", value: stats.todoOpen, icon: ListTodo, color: "bg-amber-500", href: "/todos" },
-    { title: "TO DO Done", value: stats.todoDone, icon: CheckCircle2, color: "bg-teal-500", href: "/todos" },
+    { title: "TO DO Open", value: todoOpen, icon: ListTodo, color: "bg-amber-500", href: "/todos" },
+    { title: "TO DO Done", value: todoDone, icon: CheckCircle2, color: "bg-teal-500", href: "/todos" },
   ];
 
   return (
@@ -100,6 +122,19 @@ export default function DashboardClient({ stats }: { stats: Stats }) {
           </Link>
         ))}
       </div>
+
+      <TodoWidget
+        initialTasks={stats.todos}
+        clients={stats.clients}
+        totalToday={stats.todoTotalToday}
+        completedToday={stats.todoCompletedToday}
+        onTaskStatusChange={(wasDone, isDone) => {
+          if (wasDone === isDone) return;
+          setTodoDone((value) => value + (isDone ? 1 : -1));
+          setTodoOpen((value) => value + (isDone ? -1 : 1));
+        }}
+        onTaskCreated={() => setTodoOpen((value) => value + 1)}
+      />
 
       {/* Recent Invoices Card & Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">

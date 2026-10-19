@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 
@@ -83,16 +83,27 @@ model DomainReminder {
 }
 
 model TodoTask {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
-  priority    String   @default("medium")
-  status      String   @default("open")
+  priority    String    @default("medium")
+  status      String    @default("open")
+  category    String?
   clientId    Int?
+  createdById  Int?
+  assignedToId Int?
   dueDate     DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  client      Client?  @relation(fields: [clientId], references: [id])
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  client      Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  createdBy    User?    @relation("TodoTaskCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  assignedTo   User?    @relation("TodoTaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  @@index([status, dueDate])
+  @@index([createdById])
+  @@index([assignedToId])
+  @@index([clientId])
 }
 
 model Post {
@@ -219,5 +230,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   client    Client?  @relation(fields: [clientId], references: [id])
+  createdTodoTasks  TodoTask[] @relation("TodoTaskCreator")
+  assignedTodoTasks TodoTask[] @relation("TodoTaskAssignee")
 }
-

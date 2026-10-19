@@ -1,52 +1,52 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { getTodoVisibilityWhere } from "@/lib/todos";
 import { prisma } from "@/lib/prisma";
 import TodosClient from "./todos-client";
 
 export const dynamic = "force-dynamic";
 
-
 export default async function TodosPage() {
-  const todoDelegate = (prisma as unknown as {
-    todoTask?: {
-      findMany: (args: {
-        include?: { client: { select: { id: true; name: true } } };
-        orderBy: Array<{ status?: "asc" | "desc"; dueDate?: "asc" | "desc"; createdAt?: "asc" | "desc" }>;
-      }) => Promise<
-        Array<{
-          id: number;
-          title: string;
-          description: string | null;
-          priority: string;
-          status: string;
-          clientId: number | null;
-          client?: { id: number; name: string } | null;
-          dueDate: Date | null;
-          createdAt: Date;
-          updatedAt: Date;
-        }>
-      >;
-    };
-  }).todoTask;
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role === "client") redirect("/invoices");
 
-  const tasks = todoDelegate
-    ? await todoDelegate
-        .findMany({
-          include: { client: { select: { id: true, name: true } } },
-          orderBy: [{ status: "asc" }, { dueDate: "asc" }, { createdAt: "desc" }],
-        })
-        .catch(() => [])
-    : [];
+  const userId = Number(session.user.id);
+  const [tasks, clients, teamMembers] = await Promise.all([
+    prisma.todoTask.findMany({
+      where: getTodoVisibilityWhere(userId, session.user.role),
+      include: {
+        client: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, name: true } },
+        assignedTo: { select: { id: true, name: true } },
+      },
+      orderBy: [{ status: "asc" }, { dueDate: "asc" }, { createdAt: "desc" }],
+    }),
+    prisma.client.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    prisma.user.findMany({
+      where: {
+        active: true,
+        role: { in: ["admin", "staff"] },
+        ...(session.user.role === "admin" ? {} : { id: userId }),
+      },
+      select: { id: true, name: true, role: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
-  const clients = await prisma.client.findMany({
-    select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  });
-
-  const initialTasks = tasks.map((task) => ({
-    ...task,
-    dueDate: task.dueDate ? task.dueDate.toISOString() : null,
-    createdAt: task.createdAt.toISOString(),
-    updatedAt: task.updatedAt.toISOString(),
-  }));
-
-  return <TodosClient initialTasks={initialTasks} clients={clients} />;
+  return (
+    <TodosClient
+      initialTasks={tasks.map((task) => ({
+        ...task,
+        dueDate: task.dueDate?.toISOString() ?? null,
+        completedAt: task.completedAt?.toISOString() ?? null,
+        createdAt: task.createdAt.toISOString(),
+        updatedAt: task.updatedAt.toISOString(),
+      }))}
+      clients={clients}
+      teamMembers={teamMembers}
+      currentUserId={userId}
+      isAdmin={session.user.role === "admin"}
+    />
+  );
 }

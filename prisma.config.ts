@@ -9,7 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL,
+    url: process.env.DATABASE_URL?.startsWith("file:") ? process.env.DATABASE_URL : "file:./prisma/axemedia.db",
   },
 
 
